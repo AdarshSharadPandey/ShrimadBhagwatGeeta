@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shrimadbhagavad Geeta</title>
+    <style>
+        body {
+            background-image: url('image.png');
+            background-size: cover; 
+            background-position: center; 
+            background-repeat: no-repeat; 
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+
+        #slokaContainer {
+            margin-top: 20px;
+        }
+
+        #translationContainer,
+        #EnglishContainer,
+        #ExplainationContainer,
+        #EnglishExplainationContainer {
+            margin-top: 10px;
+        }
+
+        #errorMessage {
+            color: red;
+            margin-top: 10px;
+        }
+
+        input {
+            margin-top: 10px;
+            padding: 8px;
+            font-size: 16px;
+        }
+        div {
+            background-color: rgba(255, 255, 255, 0.5); 
+            padding: 10px; 
+        }
+
+        button {
+            background-color: orange;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>Shrimad Bhagavad Geeta</h1>
+    <label for="chapter">Chapter:</label>
+    <input type="number" id="chapter" placeholder="Enter Chapter" min="1" max="18">
+    <label for="verse">Verse:</label>
+    <input type="number" id="verse" placeholder="Enter Verse" min="1">
+    <button onclick="fetchSloka()">Fetch Sloka</button>
+    <div id="slokaContainer"></div>
+    <div id="translationContainer"></div>
+    <div id="EnglishContainer"></div>
+    <div id="ExplainationContainer"></div>
+    <div id="EnglishExplainationContainer"></div>
+    <p id="errorMessage"></p>
+    <script>
+        function fetchSloka() {
+            // Get chapter and verse values from input fields
+            var chapter = document.getElementById('chapter').value;
+            if(chapter>18){
+                alert('Enter value less than or equal to 18');
+                return;
+            } 
+            var verse = document.getElementById('verse').value;
+
+            // API URL
+            var apiUrl = `https://bhagavadgitaapi.in/slok/${chapter}/${verse}/`;
+
+            // Clear previous data and error message
+            document.getElementById('slokaContainer').innerHTML = '';
+            document.getElementById('translationContainer').innerHTML = '';
+            document.getElementById('EnglishContainer').innerHTML = '';
+            document.getElementById('ExplainationContainer').innerHTML = '';
+            document.getElementById('EnglishExplainationContainer').innerHTML = '';
+            document.getElementById('errorMessage').innerHTML = '';
+
+            // Fetch data from the API
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    // Display the fetched sloka and translation
+                    document.getElementById('slokaContainer').innerHTML = '<p><strong>Sloka:</strong> ' + data.slok + '</p>';
+                    document.getElementById('translationContainer').innerHTML = '<p><strong>Hindi Translation:</strong> ' + data.tej.ht + '</p>';
+                    document.getElementById('EnglishContainer').innerHTML = '<p><strong>English Translation:</strong> ' + data.siva.et + '</p>';
+                    document.getElementById('ExplainationContainer').innerHTML = '<p><strong>Hindi Explaination:</strong> ' + data.chinmay.hc + '</p>';
+                    document.getElementById('EnglishExplainationContainer').innerHTML = '<p><strong>English Application:</strong> ' + data.san.et + '</p>';                  
+                })
+                .catch(error => {
+                    // Display error message
+                    document.getElementById('errorMessage').innerHTML = 'Error fetching data. Please try again.';
+                    console.error('Error:', error);
+                });
+        }
+    </script>
+</body>
+</html>
